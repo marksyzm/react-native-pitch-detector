@@ -1,5 +1,4 @@
 import { NativeModules, NativeEventEmitter, Platform } from 'react-native';
-import { Permissions } from '../permissions';
 import { PitchDetectorError } from '../erros';
 import { merge } from '../utils';
 
@@ -62,14 +61,6 @@ export class InternalPitchDetector {
   }
 
   /**
-   * Get current audio permission
-   * @returns Promise<boolean>
-   */
-  private async hasPermissions(): Promise<boolean> {
-    return !!(await Permissions.audio());
-  }
-
-  /**
    * Get current status
    * @returns Promise<boolean>
    */
@@ -90,12 +81,6 @@ export class InternalPitchDetector {
    */
   async start(config?: PitchDetectorConfig): Promise<void> {
     try {
-      const permission = await this.hasPermissions();
-
-      if (!permission) {
-        throw new PitchDetectorError(PitchDetectorErrors.PERMISSIONS_ERROR);
-      }
-
       const configuration = merge<PitchDetectorConfig>(
         this.getDefaultConfig(),
         config ?? {}
